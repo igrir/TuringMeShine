@@ -12,7 +12,7 @@ package entities
 		public var state:String;
 		
 		
-		[Embed (source="res/head.png")] public static const TAPE_SPR:Class;
+		[Embed (source="/../res/head.png")] public static const TAPE_SPR:Class;
 		public function Head()
 		{
 			super(x, y, graphic, mask);

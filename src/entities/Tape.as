@@ -15,7 +15,7 @@ package entities
 		public var xt:Number;
 		public var yt:Number;
 		
-		[Embed (source="res/tape_spr.png")] public static const TAPE_SPR:Class;
+		[Embed (source="/../res/tape_spr.png")] public static const TAPE_SPR:Class;
 		public function Tape()
 		{
 			super(x, y, graphic, mask);
@@ -39,6 +39,7 @@ package entities
 		
 		public function goto(s:String):void{
 			spriteSheet.play(s);	
+			this.state = s;
 		}
 		
 		override public function update():void{

@@ -12,7 +12,7 @@ package entities
 		
 		public var state:String;
 		
-		[Embed (source="res/bg.png")] public static const BG:Class;
+		[Embed (source="/../res/bg.png")] public static const BG:Class;
 		
 		public function bgWood()
 		{

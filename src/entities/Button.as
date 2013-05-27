@@ -14,16 +14,16 @@ package entities
 	public class Button extends Entity
 	{
 		public var spriteSheet:Spritemap;
-		
+		public var play:Boolean = false;
 		public var state:String;
-		
+		public var counter:int;
 		//posisi tujuan
 		public var xt:Number;
 		public var yt:Number;
 		
 		public var listener:World;
 		
-		[Embed (source="res/btn.png")] public static const PLUSMIN_SPR:Class;
+		[Embed (source="/../res/btn.png")] public static const PLUSMIN_SPR:Class;
 		public function Button(listener:World)
 		{
 			super(x, y, graphic, mask);
@@ -41,6 +41,8 @@ package entities
 			spriteSheet.add("allone", [6]);
 			spriteSheet.add("allzero", [7]);
 			spriteSheet.add("allnone", [8]);
+			spriteSheet.add("run", [9]);
+			spriteSheet.add("stop", [10]);
 			
 			
 			setHitbox(33, 33);
@@ -58,7 +60,9 @@ package entities
 			spriteSheet.play(s);	
 		}
 		
-		override public function update():void{
+		override public function update():void {
+		
+			//kalau diklik
 			if (collidePoint(x,y, Input.mouseX, Input.mouseY)) {
 				
 				//mouseDown
@@ -81,8 +85,29 @@ package entities
 						((TuringGame)(listener)).setTapesValue("1");
 					}else if (spriteSheet.currentAnim == "allzero") {
 						((TuringGame)(listener)).setTapesValue("0");
+					}else if (spriteSheet.currentAnim == "run") {
+						goto("stop");
+						this.play = true;
+					}else if (spriteSheet.currentAnim == "stop") {
+						goto("run");
+						this.play = false;
+						
+						//reset game di turing
+						((TuringGame)(listener)).reset();
 					}
 					
+				}
+				
+			}
+			
+			//kalau run
+			if (this.play == true ) {
+				
+				if (this.counter >= 60) {
+					((TuringGame)(listener)).run();
+					this.counter = 0;
+				}else {
+					this.counter++;
 				}
 				
 			}

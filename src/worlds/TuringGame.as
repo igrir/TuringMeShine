@@ -6,13 +6,16 @@ package worlds
 	import entities.bgWood;
 	
 	import net.flashpunk.World;
+	import net.flashpunk.FP;
 	
 	
 	public class TuringGame extends World
 	{
 		
 		private var arr_tape:Array = new Array();
+		private var arr_aturan:Array = new Array();
 		private var e_head:Head = new Head();
+		private var status:String;
 		
 		private var banyakTape:int = 100;
 		private var tw:int = 33; //tape width, lebar dari sebuah tape
@@ -25,6 +28,7 @@ package worlds
 		private var allone_btn:Button;
 		private var allzero_btn:Button;
 		private var allnone_btn:Button;
+		private var play_btn:Button;
 		private var current_head:int; //posisi head sekarang
 		
 		public function TuringGame()
@@ -44,6 +48,7 @@ package worlds
 			allone_btn = new Button(this);
 			allzero_btn = new Button(this);
 			allnone_btn = new Button(this);
+			play_btn = new Button(this);
 			
 			//add to world
 			addBackground();
@@ -58,7 +63,7 @@ package worlds
 			add(allone_btn);
 			add(allzero_btn);
 			add(allnone_btn);
-			
+			add(play_btn);
 			
 			//set
 			setTapesY(50);
@@ -79,6 +84,8 @@ package worlds
 			allone_btn.y 	= 166;
 			allzero_btn.y 	= 166;
 			allnone_btn.y 	= 166;
+			play_btn.y = 199;
+			
 			
 			min_btn.x 	= 300;
 			plus_btn.x 	= 333;
@@ -89,6 +96,7 @@ package worlds
 			allone_btn.x 	= 300;
 			allzero_btn.x 	= 333;
 			allnone_btn.x 	= 366;
+			play_btn.x = 300;
 			
 			plus_btn.goto("plus");
 			min_btn.goto("min");
@@ -99,11 +107,25 @@ package worlds
 			allone_btn.goto("allone");
 			allzero_btn.goto("allzero");
 			allnone_btn.goto("allnone");
+			play_btn.goto("run");
 			
 			//mengisi semua tape jadi none
-			setTapesValue("none");
+			setTapesValue("NONE");
 			
-			setTapesValueByArray([0,1,2,0,1,0,1,0,1,0,1,
+			arr_aturan = [["0","S1","S1","0","R"],
+							["1", "S1", "S1", "1", "R"],
+							["NONE","S1","S2","NONE","L"],
+							["0","S2","S5","1","L"],
+							["1","S2","S2","0","L"],
+							["NONE", "S2", "S3", "NONE", "R"],
+							["0", "S3", "S4", "0", "L"],
+							["1", "S3", "S4", "0", "L"],
+							["NONE", "S4", "S5", "1", "R"]
+							];
+							
+			//trace(arr_aturan[0]);
+			this.status = "S1";
+			/*setTapesValueByArray([0,1,2,0,1,0,1,0,1,0,1,
 						   0,1,2,0,1,0,1,0,1,0,1,
 						   0,1,2,0,1,0,1,0,1,0,1,
 						   0,1,2,0,1,0,1,0,1,0,1,
@@ -112,7 +134,9 @@ package worlds
 						   0,1,2,0,1,0,1,0,1,0,1,
 						   0,1,2,0,1,0,1,0,1,0,1,
 						   0,1,2,0,1,0,1,0,1,0,1,
-						   0,1,2,0,1,0,1,0,1,0,1]);
+						   0,1,2,0,1,0,1,0,1,0,1]);*/
+						   
+			
 			
 		}
 				
@@ -167,7 +191,6 @@ package worlds
 			}
 		}
 		
-		
 		//set tapi animasi smooth
 		public function setTapesXSmooth(x:int):void{
 			var i:int;
@@ -215,7 +238,6 @@ package worlds
 					e_bgWood.x = i*e_bgWood.width;
 					e_bgWood.y = j*e_bgWood.height;
 					add(e_bgWood);
-					trace(e_bgWood);
 				}
 			}
 		}
@@ -234,6 +256,45 @@ package worlds
 		public function resetTapesPosition():void{
 			setTapesXSmooth(tw*-50);
 			current_head = 56;
+		}
+		
+		public function run():void {
+			trace("status : " + this.status);
+			var i:int = 0;
+			
+			var ketemu:Boolean = false;
+			var counter:int = 0;
+			while (ketemu == false && i < this.arr_aturan.length) {
+				
+				if (((Tape)(this.arr_tape[current_head]).state == this.arr_aturan[i][0]) && 
+				(this.arr_aturan[i][1] == this.status)) {
+					trace("KETEMU: " + this.arr_aturan[i][0] + " " + this.arr_aturan[i][1]+
+															" " + this.arr_aturan[i][2]+
+															" " + this.arr_aturan[i][3]+
+															" " + this.arr_aturan[i][4] + " " + 
+															(Tape)(this.arr_tape[current_head]).state);
+					
+					setTape(this.arr_aturan[i][3]);
+					if (this.arr_aturan[i][4] == "R") {
+						moveTapesX( -1);
+					}else{
+						moveTapesX(1);
+					}
+					this.status = this.arr_aturan[i][2];
+					
+					ketemu = true;
+					
+				}else{
+					i++;
+				}
+			}
+			
+			
+		}
+		
+		public function reset():void {
+				this.status = "S1";
+				resetTapesPosition();
 		}
 		
 	}
