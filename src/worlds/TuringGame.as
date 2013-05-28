@@ -4,9 +4,10 @@ package worlds
 	import entities.Head;
 	import entities.Tape;
 	import entities.bgWood;
+	import entities.TextEntity;
 	
-	import net.flashpunk.World;
 	import net.flashpunk.FP;
+	import net.flashpunk.World;
 	
 	
 	public class TuringGame extends World
@@ -31,6 +32,9 @@ package worlds
 		private var play_btn:Button;
 		private var current_head:int; //posisi head sekarang
 		
+		private var txt_status:TextEntity;
+		private var txt_aturan:TextEntity;
+		
 		public function TuringGame()
 		{
 			super();
@@ -50,6 +54,9 @@ package worlds
 			allnone_btn = new Button(this);
 			play_btn = new Button(this);
 			
+			txt_status = new TextEntity();
+			txt_aturan = new TextEntity();
+			
 			//add to world
 			addBackground();
 			addTapes();
@@ -65,9 +72,12 @@ package worlds
 			add(allnone_btn);
 			add(play_btn);
 			
+			add(txt_status);
+			add(txt_aturan);
+			
 			//set
-			setTapesY(50);
-			e_head.y = 50;
+			setTapesY(150);
+			e_head.y = 150;
 			
 			//taruh head di posisi 56
 			setTapesX(tw*-50);	//geser sejauh 50 blok
@@ -75,16 +85,16 @@ package worlds
 			
 			current_head = 50+6;	//posisi head ada di 56
 			
-			plus_btn.y 	= 100;
-			min_btn.y 	= 100;
-			reset_btn.y = 100;
-			one_btn.y 	= 133;
-			zero_btn.y 	= 133;
-			none_btn.y 	= 133;
-			allone_btn.y 	= 166;
-			allzero_btn.y 	= 166;
-			allnone_btn.y 	= 166;
-			play_btn.y = 199;
+			plus_btn.y 	= 193;
+			min_btn.y 	= 193;
+			reset_btn.y = 193;
+			one_btn.y 	= 226;
+			zero_btn.y 	= 226;
+			none_btn.y 	= 226;
+			allone_btn.y 	= 259;
+			allzero_btn.y 	= 259;
+			allnone_btn.y 	= 259;
+			play_btn.y = 292;
 			
 			
 			min_btn.x 	= 300;
@@ -97,6 +107,15 @@ package worlds
 			allzero_btn.x 	= 333;
 			allnone_btn.x 	= 366;
 			play_btn.x = 300;
+			
+			txt_status.x = 0;
+			txt_status.y = 190;
+			txt_aturan.x = 0;
+			txt_aturan.y = 210;
+			
+			txt_aturan.width = 300;
+			
+			
 			
 			plus_btn.goto("plus");
 			min_btn.goto("min");
@@ -125,16 +144,12 @@ package worlds
 							
 			//trace(arr_aturan[0]);
 			this.status = "S1";
-			/*setTapesValueByArray([0,1,2,0,1,0,1,0,1,0,1,
-						   0,1,2,0,1,0,1,0,1,0,1,
-						   0,1,2,0,1,0,1,0,1,0,1,
-						   0,1,2,0,1,0,1,0,1,0,1,
-						   0,1,2,0,1,0,1,0,1,0,1,
-						   0,1,2,0,1,0,1,0,1,0,1,
-						   0,1,2,0,1,0,1,0,1,0,1,
-						   0,1,2,0,1,0,1,0,1,0,1,
-						   0,1,2,0,1,0,1,0,1,0,1,
-						   0,1,2,0,1,0,1,0,1,0,1]);*/
+			
+			txt_status.setTexts("Status : " + this.status);
+			txt_status.updateText();
+			
+			txt_aturan.setTexts("Aturan : " + this.status);
+			txt_aturan.updateText();
 						   
 			
 			
@@ -259,6 +274,11 @@ package worlds
 		}
 		
 		public function run():void {
+			txt_status.setTexts("Status : " + this.status);
+			txt_status.updateText();
+			
+			
+			
 			trace("status : " + this.status);
 			var i:int = 0;
 			
@@ -273,6 +293,12 @@ package worlds
 															" " + this.arr_aturan[i][3]+
 															" " + this.arr_aturan[i][4] + " " + 
 															(Tape)(this.arr_tape[current_head]).state);
+					
+					txt_aturan.setTexts(this.arr_aturan[i][0] + " " + this.arr_aturan[i][1]+
+						" " + this.arr_aturan[i][2]+
+						" " + this.arr_aturan[i][3]+
+						" " + this.arr_aturan[i][4] + " ");
+					txt_aturan.updateText();
 					
 					setTape(this.arr_aturan[i][3]);
 					if (this.arr_aturan[i][4] == "R") {
@@ -295,6 +321,9 @@ package worlds
 		public function reset():void {
 				this.status = "S1";
 				resetTapesPosition();
+				
+				txt_status.setTexts("Status : " + this.status);
+				txt_status.updateText();
 		}
 		
 	}
